@@ -798,5 +798,14 @@ function showPlayerSelection() {
   
 </script>
 
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js");
+  });
+}
+</script>
+
+
       </div>
 </div>
