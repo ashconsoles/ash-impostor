@@ -1,4 +1,4 @@
-const CACHE_NAME = "ash-impostor-v14"; // ⬅ bump version here
+const CACHE_NAME = "ash-impostor-v15"; // ⬅ bump version here
 const ASSETS = [
   "./",
   "./index.html",
