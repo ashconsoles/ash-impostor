@@ -5,6 +5,7 @@ const ASSETS = [
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
+  "./apple-touch-icon.png",
   "./GL1.png",
   "./qrcode.jpg"
 ];
