@@ -1,4 +1,4 @@
-const CACHE_NAME = "ash-impostor-v10";
+const CACHE_NAME = "ash-impostor-v11";
 
 const FILES_TO_CACHE = [
   "./",
