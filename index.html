@@ -1,0 +1,802 @@
+<div class="game-container">
+  <div class="game-inner">
+
+<div id="impostorGame">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"></meta>
+  <!--START SCREEN-->
+  <div class="screen active" id="startScreen">
+    <img alt="Ash Impostor" class="game-title-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjB749IpoWxO9eRIs5uRT0IY1rWNlXHcd_VMztqSQr4G5MsyCRzp0zCuGBJbJSthkXb3NFhzEUljEhTC-PRM1ohfrcOjrYjy9JRG1X8ihWMBsyGvOc_iqEycXg-EPPASuFWziSEE8g0IJrX1t8jqXDOjC_vBTBDFVlnP4_1OBodEJWmCw9gBPThu5lGw-U/s500/1.png" />
+    <button class="main-btn" id="startBtn">Start Game</button>
+  </div>
+  
+  
+  <!--HAMBURGER MENU-->
+<div id="menuBtn">☰</div>
+
+<div id="menuDropdown">
+  <button data-action="restart">Restart</button>
+  <button data-action="words">Manage Words</button>
+  <button data-action="rules">Rules</button>
+  <button data-action="donate">Donate</button>
+  <button data-action="about">About</button>
+</div>
+
+<!--WORD MANAGER POPUP-->
+<div class="popup" id="wordPopup">
+  <div>
+    <h3>Manage Words</h3>
+    <textarea id="wordInput"></textarea>
+    <button class="main-btn" id="saveWords">Save</button>
+    <button class="main-btn closePopup">Close</button>
+    <button class="main-btn" id="resetWords">Reset to Default</button>
+  </div>
+</div>
+
+
+<!--DONATE POPUP-->
+<div class="popup" id="donatePopup">
+  <div>
+    <h3>Support the Developer</h3>
+    <div class="qr-box" src=""><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhvaTV5abS5sbu9WXwVi8bDgt8ILrE-n1XkE_MhMyDe0JblbIldUHM2tXU2HfhfuBv6TncAhwaZOIcl_m92PyZK6hy1-pFyl7SudCBHiRTI1B7L5PeFXUU1gP_nR3fE8-vnNNTsNGll9KmWQ5xmD1f99Bpyfpl0SbJjcdJGA6dny0vA5zrp9XVnATOvjyY/s800/qrcode.jpg"/></div>
+    <button class="main-btn closePopup">Close</button>
+  </div>
+</div>
+
+<!--ABOUT POPUP-->
+<div class="popup" id="aboutPopup">
+  <div>
+    <h3>About</h3>
+    <p>
+      Ash Impostor Game<br />
+      Developed by Ash<br />
+      A fun party word game.
+    </p>
+    <button class="main-btn closePopup">Close</button>
+  </div>
+</div>
+
+  
+  
+  
+  <!--RULES POPUP-->
+<div class="popup" id="rulesPopup">
+  <div>
+    <h3>Game Rules</h3>
+
+    <p>
+      1. Select the number of players and impostors.<br />
+      2. A secret word is chosen randomly.<br />
+      3. Each player presses and holds the <b>Show</b> button for 3 seconds to see their role.<br />
+      4. Impostors will see <b>Impostor</b> instead of the word.<br />
+      5. After all players have seen their roles, tap <b>Search Impostor</b>.<br />
+      6. Players discuss and try to identify the impostor(s).<br />
+      7. Tap players to mark suspects.<br />
+      8. Find all impostors to win the game.<br />
+      9. If the Imposter guesses the correct word, They win the game.
+    </p>
+
+    <button class="main-btn closePopup">Close</button>
+  </div>
+</div>
+
+  
+  
+  
+  
+  
+  
+
+  <!--PLAYER COUNT POPUP-->
+  <div class="screen" id="playerPopup">
+  <h2>Select Number of Players and Imposters</h2>
+  <input id="playerCount" max="20" type="number" />
+  <input id="impostorCount" type="number" />
+  <button class="main-btn" id="playerOk">OK</button>
+</div>
+
+
+  <!--GAME SCREEN-->
+  <div class="screen" id="gameScreen">
+    <h2 id="playerLabel"></h2>
+    <div id="wordBox"></div>
+    <button class="main-btn" id="showBtn">Show</button>
+<div id="holdProgress">
+  <div id="holdBar"></div>
+</div>
+
+  </div>
+
+  <!--SEARCH SCREEN-->
+  <div class="screen" id="searchScreen">
+    <h2 id="searchText">Searching<span id="dots">...</span></h2>
+    <button class="main-btn" id="foundBtn">Found</button>
+  </div>
+
+  <!--RESULT SCREEN-->
+  <div class="screen" id="resultScreen">
+  <h2>Result</h2>
+  <p id="resultWord"></p>
+  <p id="resultImpostor"></p>
+
+  <div id="playerList"></div>
+
+  <button class="main-btn" id="endGameBtn" style="display: none;">End Game</button>
+</div>
+
+
+<style>
+  .post-title, .entry-title, .post-title-container, .blog-title, .title-wrap {
+      display: none !important;
+    }
+  
+  
+  
+  
+
+.game-container,
+.game-inner,
+#mapViewport {
+  
+}
+  
+
+ html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Outer fixed container (full-screen) */
+.game-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #111;
+}
+
+/* Inner game area: acts as the viewport for the large tile map.
+   hide native scrolling and let pan logic move the map. */
+  
+.game-inner {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: white;
+
+  display: flex;
+  justify-content: center; /* horizontal center */
+  align-items: center;     /* vertical center */
+
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+ 
+  #endGameBtn {
+  display: block;
+  margin: 20px auto 0;
+}
+  
+  
+/* Hamburger */
+#menuBtn {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  font-size: 26px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#menuDropdown {
+  position: fixed;
+  top: 55px;
+  right: 20px;
+  background: #222;
+  border-radius: 8px;
+  display: none;
+  z-index: 1000;
+}
+
+#menuDropdown button {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  background: none;
+  color: white;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+#menuDropdown button:hover {
+  background: #333;
+}
+
+/* Popups */
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;              
+  z-index: 9999;
+
+  justify-content: center;
+  align-items: center;
+}
+
+/* inner popup box */
+.popup > div {
+  background: #222;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 10px;
+}
+
+.game-title-img {
+  width: 300px;      
+  max-width: 90%;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.popup h3 {
+  margin-bottom: 10px;
+}
+
+.popup textarea {
+  width: 100%;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+.popup button {
+  margin: 5px;
+}
+
+/* QR Placeholder */
+.qr-box {
+  width: 200px;
+  height: 200px;
+  background: #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px auto;
+}
+  
+  
+ 
+  #holdProgress {
+  width: 100%;
+  height: 8px;
+  background: #333;
+  border-radius: 6px;
+  margin-top: 12px;
+  overflow: hidden;
+  display: none; 
+}
+
+
+#holdBar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #00bcd4, #4caf50);
+  transition: width 0s;
+}
+
+  
+  
+  #playerList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.player-item {
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #222;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+}
+
+.player-item.red {
+  color: red;
+}
+
+.player-item.green {
+  color: #4caf50;
+}
+
+  
+  
+  
+  
+#impostorGame {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+h1, h2 { margin-bottom: 20px; }
+
+/* Dark mode inputs */
+input,
+textarea {
+  background: #111;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 12px 10px;
+  font-size: 16px;
+  line-height: 1.4;
+  min-height: 44px; 
+  box-sizing: border-box;
+}
+
+  
+/* Stack inputs ONLY when popup is active */
+#playerPopup.screen.active {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Inputs stacked vertically */
+#playerPopup input {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+/* Fix placeholder cut-off */
+#playerPopup input {
+  min-height: 44px;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+
+
+/* Placeholder text */
+input::placeholder,
+textarea::placeholder {
+  color: #aaa;
+}
+
+/* Focus state */
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.3);
+}
+
+
+.main-btn {
+  padding: 12px 30px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #00bcd4, #4caf50);
+  color: #fff;
+  cursor: pointer;
+}
+
+.main-btn:hover {
+  opacity: 0.9;
+}
+
+#wordBox {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 20px 0;
+  min-height: 30px;
+}
+  
+  
+  
+  
+  
+  
+</style>
+
+<script>
+(function () {
+
+  /* =======================
+     GAME DATA
+  ======================= */
+  let words = JSON.parse(localStorage.getItem("impostorWords")) || [
+    "Apple",
+    "Book",
+    "Coffee",
+    "Cat",
+    "Bread",
+    "Hospital",
+    "Football",
+    "Brush",
+    "Phone",
+    "Pen",
+    "Mountain",
+    "Cup",
+    "Robot",
+    "Cycle",
+    "Shoes",
+    "Noodles",
+    "Water",
+    "Sky",
+    "Fish",
+    "Cow",
+    "Horse",
+    "Snake",
+    "Toilet",
+    "Medicine",
+    "School",
+    "Library",
+    "Tree",
+    "Internet",
+    "Mango",
+    "Rose",
+    "Tea",
+    "Goa",
+    "Toothpaste",
+    "Honey",
+    "Baby",
+    "Underwear"
+  ];
+
+  let totalPlayers = 0;
+  let currentPlayer = 1;
+ let impostorCount = 1; 
+let impostorPlayers = [];
+let foundImpostors = [];
+
+  let secretWord = "";
+
+  let holdTimer = null;
+  let revealed = false;
+  let progressInterval = null;
+  let progressStartTime = 0;
+
+
+  /* =======================
+     ELEMENTS
+  ======================= */
+  const screens = {
+    start: document.getElementById("startScreen"),
+    popup: document.getElementById("playerPopup"),
+    game: document.getElementById("gameScreen"),
+    search: document.getElementById("searchScreen"),
+    result: document.getElementById("resultScreen")
+  };
+
+  const startBtn = document.getElementById("startBtn");
+  const playerOk = document.getElementById("playerOk");
+  const showBtn = document.getElementById("showBtn");
+  const foundBtn = document.getElementById("foundBtn");
+  const restartBtn = document.getElementById("restartBtn");
+
+  const playerLabel = document.getElementById("playerLabel");
+  const wordBox = document.getElementById("wordBox");
+  const resultWord = document.getElementById("resultWord");
+  const resultImpostor = document.getElementById("resultImpostor");
+
+  const menuBtn = document.getElementById("menuBtn");
+  const menuDropdown = document.getElementById("menuDropdown");
+
+  const wordPopup = document.getElementById("wordPopup");
+  const donatePopup = document.getElementById("donatePopup");
+  const aboutPopup = document.getElementById("aboutPopup");
+  const rulesPopup = document.getElementById("rulesPopup");
+
+
+  const wordInput = document.getElementById("wordInput");
+  const saveWords = document.getElementById("saveWords");
+  const resetWords = document.getElementById("resetWords");
+  const holdBar = document.getElementById("holdBar");
+
+
+  /* =======================
+     SCREEN HANDLER
+  ======================= */
+  function showScreen(screen) {
+    Object.values(screens).forEach(s => s.classList.remove("active"));
+    screen.classList.add("active");
+  }
+
+  /* =======================
+     GAME FLOW
+  ======================= */
+  startBtn.onclick = () => showScreen(screens.popup);
+
+  playerOk.onclick = () => {
+  document.getElementById("holdProgress").style.display = "block";
+
+  totalPlayers = parseInt(document.getElementById("playerCount").value);
+  impostorCount = parseInt(document.getElementById("impostorCount").value) || 1;
+
+
+  if (!totalPlayers || totalPlayers < 3) return;
+  if (!impostorCount || impostorCount < 1) return;
+  if (impostorCount >= totalPlayers) {
+    alert("Number of impostors must be less than number of players");
+    return;
+  }
+
+  // Pick random impostor players
+  impostorPlayers = [];
+foundImpostors = [];
+
+while (impostorPlayers.length < impostorCount) {
+  const p = Math.floor(Math.random() * totalPlayers) + 1;
+  if (!impostorPlayers.includes(p)) impostorPlayers.push(p);
+}
+
+  secretWord = words[Math.floor(Math.random() * words.length)];
+
+  currentPlayer = 1;
+updatePlayerLabel();
+playerLabel.style.display = "block";
+showBtn.textContent = "Show";
+showScreen(screens.game);
+
+};
+
+
+  function updatePlayerLabel() {
+    playerLabel.textContent = "Player (" + currentPlayer + ")";
+  }
+
+  /* =======================
+     HOLD TO SHOW (3s)
+  ======================= */
+  showBtn.addEventListener("mousedown", startHold);
+  showBtn.addEventListener("touchstart", startHold);
+
+  showBtn.addEventListener("mouseup", endHold);
+  showBtn.addEventListener("mouseleave", endHold);
+  showBtn.addEventListener("touchend", endHold);
+  showBtn.addEventListener("touchcancel", endHold);
+  
+  
+  
+
+function startHold(e) {
+  if (showBtn.textContent === "Search Impostor") {
+    document.getElementById("holdProgress").style.display = "none";
+    showScreen(screens.search);
+    animateDots();
+    return;
+  }
+
+  e.preventDefault();
+
+  const holdDuration = 3000;
+  progressStartTime = Date.now();
+  holdBar.style.width = "0%";
+
+  progressInterval = setInterval(() => {
+    const elapsed = Date.now() - progressStartTime;
+    const percent = Math.min((elapsed / holdDuration) * 100, 100);
+    holdBar.style.width = percent + "%";
+  }, 16);
+
+  holdTimer = setTimeout(() => {
+    wordBox.textContent =
+      impostorPlayers.includes(currentPlayer) ? "Impostor" : secretWord;
+    revealed = true;
+  }, holdDuration);
+}
+  
+  
+  
+
+  function endHold() {
+  clearTimeout(holdTimer);
+  clearInterval(progressInterval);
+
+  holdBar.style.width = "0%";
+
+  if (!revealed) return;
+
+  wordBox.textContent = "";
+  revealed = false;
+
+  if (currentPlayer < totalPlayers) {
+    currentPlayer++;
+    updatePlayerLabel();
+  } else {
+    // LAST PLAYER DONE
+    showBtn.textContent = "Search Impostor";
+    document.getElementById("holdProgress").style.display = "none";
+
+    // ✅ HIDE PLAYER NUMBER
+    playerLabel.style.display = "none";
+  }
+}
+
+
+  
+
+  function animateDots() {
+    const dots = document.getElementById("dots");
+    let count = 0;
+    setInterval(() => {
+      count = (count + 1) % 4;
+      dots.textContent = ".".repeat(count);
+    }, 500);
+  }
+
+foundBtn.onclick = () => {
+  resultWord.textContent = "Secret Word: " + secretWord;
+
+  const endBtn = document.getElementById("endGameBtn");
+  document.getElementById("playerList").innerHTML = "";
+
+  // ✅ ALWAYS show End Game button
+  endBtn.style.display = "block";
+
+  endBtn.onclick = () => {
+    showBtn.textContent = "Show";
+    currentPlayer = 1;
+    playerLabel.style.display = "block";
+    showScreen(screens.start);
+  };
+
+  if (impostorPlayers.length === 1) {
+    resultImpostor.textContent =
+      "Impostor: Player (" + impostorPlayers[0] + ")";
+    showScreen(screens.result);
+    return;
+  }
+
+  resultImpostor.textContent = "Find All Impostors";
+  showPlayerSelection();
+  showScreen(screens.result);
+};
+
+  
+  
+  
+    /* =======================
+   HAMBURGER MENU
+======================= */
+menuBtn.onclick = () => {
+  menuDropdown.style.display =
+    menuDropdown.style.display === "block" ? "none" : "block";
+};
+
+menuDropdown.addEventListener("click", (e) => {
+  if (!e.target.dataset.action) return;
+
+  const action = e.target.dataset.action;
+  menuDropdown.style.display = "none";
+
+  if (action === "restart") showScreen(screens.start);
+
+  if (action === "words") {
+    wordInput.value = words.join("\n");
+    wordPopup.style.display = "flex";
+  }
+
+  if (action === "rules") rulesPopup.style.display = "flex";
+  if (action === "donate") donatePopup.style.display = "flex";
+  if (action === "about") aboutPopup.style.display = "flex";
+});
+
+/* Close menu when clicking outside */
+document.addEventListener("click", (e) => {
+  if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+    menuDropdown.style.display = "none";
+  }
+});
+
+  
+  
+  /* =======================
+   POPUP CLOSE HANDLERS
+======================= */
+document.querySelectorAll(".closePopup").forEach(btn => {
+  btn.onclick = () => {
+    btn.closest(".popup").style.display = "none";
+  };
+});
+
+document.querySelectorAll(".popup").forEach(popup => {
+  popup.onclick = (e) => {
+    if (e.target === popup) popup.style.display = "none";
+  };
+});
+
+  
+
+  
+function showPlayerSelection() {
+  const list = document.getElementById("playerList");
+  const endBtn = document.getElementById("endGameBtn");
+
+  list.innerHTML = "";
+  endBtn.style.display = "block";
+
+  for (let i = 1; i <= totalPlayers; i++) {
+    const item = document.createElement("div");
+    item.textContent = "Player " + i;
+    item.className = "player-item";
+
+   item.onclick = () => {
+  // prevent multiple clicks
+  if (item.classList.contains("red") || item.classList.contains("green")) return;
+
+  if (impostorPlayers.includes(i)) {
+    // Correct impostor
+    item.classList.add("red");
+    item.textContent = ""; // remove number only for impostor
+    foundImpostors.push(i);
+
+    if (foundImpostors.length === impostorPlayers.length) {
+      revealSafePlayers();
+    }
+  } else {
+    // Wrong guess (safe player)
+    item.classList.add("red"); // turn red
+    // DO NOT remove number
+  }
+
+    };
+
+    list.appendChild(item);
+  }
+
+  endBtn.onclick = () => {
+    showBtn.textContent = "Show";
+    currentPlayer = 1;
+    showScreen(screens.start);
+  };
+}
+
+
+
+
+
+  
+  function revealSafePlayers() {
+  document.querySelectorAll(".player-item").forEach(item => {
+    if (!item.classList.contains("red")) {
+      item.classList.add("green");
+    }
+  });
+}
+
+  
+  
+  
+  
+  
+
+
+})();
+  
+
+  
+  
+</script>
+
+      </div>
+</div>
