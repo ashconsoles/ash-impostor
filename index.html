@@ -248,10 +248,12 @@
   margin: 0 auto 20px;
 }
 
-  .qr-img {
-  width: 100px;      
-  height: 100px;
-  display: block;
+ .qr-img {
+  width: 100%;
+  height: 100%;
+  max-width: 140px;
+  max-height: 140px;
+  object-fit: contain;
 }
 
 .popup h3 {
@@ -270,13 +272,14 @@
 
 /* QR Placeholder */
 .qr-box {
-  width: 100px;
-  height: 100px;
+  width: 140px;
+  height: 140px;
+  margin: 15px auto;
   background: #444;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 10px auto;
+  border-radius: 8px;
 }
   
   
