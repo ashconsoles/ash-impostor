@@ -124,8 +124,8 @@
   <!--PLAYER COUNT POPUP-->
   <div class="screen" id="playerPopup">
   <h2>Select Number of Players and Imposters</h2>
-  <input id="playerCount" max="9999999999" type="number" lable="Number Of Players"/>
-  <input id="impostorCount" type="number" lable="Number Of Imposters" />
+  <input id="playerCount" max="9999999999" type="number" placeholder="Number of Players" />
+  <input id="impostorCount" type="number" placeholder="Number of Imposters" />
   <button class="main-btn" id="playerOk">OK</button>
 </div>
 
@@ -396,7 +396,11 @@ textarea {
   box-sizing: border-box;
 }
 
-  
+   input::placeholder {
+  color: #aaa;
+}
+
+   
 /* Stack inputs ONLY when popup is active */
 #playerPopup.screen.active {
   display: flex;
