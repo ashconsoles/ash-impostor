@@ -834,7 +834,23 @@ function showPlayerSelection() {
 }
 
   
-  
+
+
+   document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    // App reopened
+    resetGameToStart();
+  }
+});
+
+function resetGameToStart() {
+  currentPlayer = 1;
+  foundImpostors = [];
+  impostorPlayers = [];
+  showBtn.textContent = "Show";
+  showScreen(screens.start);
+}
+
   
   
   
