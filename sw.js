@@ -1,4 +1,5 @@
-const CACHE_NAME = "ash-impostor-v17"; // ⬅ bump version here
+const CACHE_NAME = "ash-impostor-v18"; // bump on every release
+
 const ASSETS = [
   "./",
   "./index.html",
@@ -29,7 +30,22 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  // Only handle GET requests
+  if (event.request.method !== "GET") return;
+
   event.respondWith(
-    caches.match(event.request).then(res => res || fetch(event.request))
+    fetch(event.request)
+      .then(response => {
+        // Online → update cache
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, clone);
+        });
+        return response;
+      })
+      .catch(() => {
+        // Offline → fallback to cache
+        return caches.match(event.request);
+      })
   );
 });
