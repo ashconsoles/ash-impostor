@@ -838,9 +838,16 @@ function showPlayerSelection() {
 
  document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
-    location.reload();
+    if (navigator.onLine) {
+      // Internet available → behave like web app
+      location.reload();
+    } else {
+      // Offline → behave like native app
+      console.log("Offline mode: resuming without reload");
+    }
   }
 });
+
 
   
   
