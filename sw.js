@@ -1,4 +1,4 @@
-const CACHE_NAME = "ash-impostor-v18"; // bump on every release
+const CACHE_NAME = "ash-impostor-v19"; // ⬅ CHANGE this on every update
 
 const ASSETS = [
   "./",
@@ -11,14 +11,14 @@ const ASSETS = [
   "./qrcode.jpg"
 ];
 
-self.addEventListener("install", (event) => {
+self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
   );
-  self.skipWaiting();
+  self.skipWaiting(); // ⬅ IMPORTANT
 });
 
-self.addEventListener("activate", (event) => {
+self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
@@ -26,26 +26,22 @@ self.addEventListener("activate", (event) => {
       )
     )
   );
-  self.clients.claim();
+  self.clients.claim(); // ⬅ IMPORTANT
 });
 
-self.addEventListener("fetch", (event) => {
-  // Only handle GET requests
+self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+  if (!event.request.url.startsWith(self.location.origin)) return;
 
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        // Online → update cache
         const clone = response.clone();
         caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, clone);
         });
         return response;
       })
-      .catch(() => {
-        // Offline → fallback to cache
-        return caches.match(event.request);
-      })
+      .catch(() => caches.match(event.request))
   );
 });
