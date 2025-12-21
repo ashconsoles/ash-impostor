@@ -1,14 +1,15 @@
 const CACHE_NAME = "ash-impostor-v21"; // ⬅ CHANGE this on every update
+const OFFLINE_PAGE = "/ash-impostor/index.html";
 
 const ASSETS = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./icon-192.png",
-  "./icon-512.png",
-  "./apple-touch-icon.png",
-  "./GL1.png",
-  "./qrcode.jpg"
+ "/ash-impostor/",
+  "/ash-impostor/index.html",
+  "/ash-impostor/manifest.json",
+  "/ash-impostor/icon-192.png",
+  "/ash-impostor/icon-512.png",
+  "/ash-impostor/apple-touch-icon.png",
+  "/ash-impostor/GL1.png",
+  "/ash-impostor/qrcode.jpg"
 ];
 
 self.addEventListener("install", event => {
@@ -42,6 +43,6 @@ self.addEventListener("fetch", event => {
         });
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => caches.match(event.request).then(res => res || caches.match(OFFLINE_PAGE)))
   );
 });
