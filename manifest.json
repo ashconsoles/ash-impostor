@@ -1,8 +1,9 @@
 {
   "name": "Ash Impostor",
   "short_name": "Ash Impostor",
-  ""start_url": "/ash-impostor/index.html",
-  "scope": "/ash-impostor/"
+  "start_url": "/ash-impostor/index.html",
+  "scope": "/ash-impostor/",
+  "id": "/index.html",
   "display": "standalone",
   "background_color": "#111111",
   "theme_color": "#111111",
