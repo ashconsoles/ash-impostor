@@ -762,7 +762,7 @@ document.querySelectorAll(".popup").forEach(popup => {
 
   
 /* =======================
-   WORD MANAGER SAVE
+   WORD MANAGER SAVE (PWA SAFE)
 ======================= */
 saveWords.onclick = () => {
   const newWords = wordInput.value
@@ -770,18 +770,15 @@ saveWords.onclick = () => {
     .map(w => w.trim())
     .filter(w => w.length > 0);
 
-  if (newWords.length === 0) {
-    alert("Please add at least one word");
-    return;
-  }
+  // Do nothing if empty
+  if (newWords.length === 0) return;
 
-  // Save to localStorage
   localStorage.setItem("impostorWords", JSON.stringify(newWords));
 
-  // Update game words
+  // Update runtime words
   words = newWords;
 
-  alert("Words saved successfully!");
+  // Close popup silently
   wordPopup.style.display = "none";
 };
 
@@ -790,12 +787,14 @@ saveWords.onclick = () => {
    RESET TO DEFAULT WORDS
 ======================= */
 resetWords.onclick = () => {
-  if (!confirm("Reset words to default?")) return;
-
   localStorage.removeItem("impostorWords");
-  location.reload(); // reload to re-merge defaults
-};
 
+  // Restore defaults immediately
+  words = [...defaultWords];
+  localStorage.setItem("impostorWords", JSON.stringify(words));
+
+  wordInput.value = words.join("\n");
+};
 
       
 function showPlayerSelection() {
