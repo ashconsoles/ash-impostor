@@ -1,4 +1,4 @@
-const CACHE_NAME = "ash-impostor-v20"; // ⬅ CHANGE this on every update
+const CACHE_NAME = "ash-impostor-v21"; // ⬅ CHANGE this on every update
 
 const ASSETS = [
   "./",
