@@ -465,11 +465,9 @@ textarea:focus {
 <script>
 (function () {
 
- /* =======================
-   DEFAULT WORDS VERSIONING
+/* =======================
+   DEFAULT WORDS
 ======================= */
-const GAME_VERSION = "1"; // ⬅ Increment this when adding new default words
-
 const defaultWords = [
   "Apple","Book","Coffee","Cat","Bread","Hospital","Football",
   "Brush","Phone","Pen","Mountain","Cup","Robot","Cycle","Shoes",
@@ -483,25 +481,20 @@ const defaultWords = [
    LOAD SAVED WORDS
 ======================= */
 let savedWords = JSON.parse(localStorage.getItem("impostorWords")) || [];
-let storedVersion = localStorage.getItem("impostorVersion");
 
 /* =======================
    MERGE DEFAULT + SAVED
 ======================= */
-if (storedVersion !== GAME_VERSION) {
-  // Add new default words that aren't already saved
-  defaultWords.forEach(word => {
-    if (!savedWords.includes(word)) savedWords.push(word);
-  });
-
-  // Update version in localStorage
-  localStorage.setItem("impostorVersion", GAME_VERSION);
-}
+defaultWords.forEach(word => {
+  if (!savedWords.includes(word)) savedWords.push(word);
+});
 
 // Save merged words back
 localStorage.setItem("impostorWords", JSON.stringify(savedWords));
 
-let words = savedWords; // Use this array for your game
+// Use this array for the game
+let words = savedWords;
+
 
 
   let totalPlayers = 0;
