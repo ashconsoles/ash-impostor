@@ -465,52 +465,44 @@ textarea:focus {
 <script>
 (function () {
 
-  /* =======================
-     GAME DATA
-  ======================= */
-  let words = JSON.parse(localStorage.getItem("impostorWords")) || [
-    "Apple",
-    "Book",
-    "Coffee",
-    "Cat",
-    "Bread",
-    "Hospital",
-    "Football",
-    "Brush",
-    "Phone",
-    "Pen",
-    "Mountain",
-    "Cup",
-    "Robot",
-    "Cycle",
-    "Shoes",
-    "Noodles",
-    "Water",
-    "Sky",
-    "Fish",
-    "Cow",
-    "Horse",
-    "Snake",
-    "Toilet",
-    "Medicine",
-    "School",
-    "Library",
-    "Tree",
-    "Internet",
-    "Mango",
-    "Rose",
-    "Tea",
-    "Goa",
-    "Toothpaste",
-    "Honey",
-    "Baby",
-    "Underwear",
-    "Door",
-    "Jail",
-    "Beach",
-    "Cycle",
-    "Monkey"
-  ];
+ /* =======================
+   DEFAULT WORDS VERSIONING
+======================= */
+const GAME_VERSION = "2"; // ⬅ Increment this when adding new default words
+
+const defaultWords = [
+  "Apple","Book","Coffee","Cat","Bread","Hospital","Football",
+  "Brush","Phone","Pen","Mountain","Cup","Robot","Cycle","Shoes",
+  "Noodles","Water","Sky","Fish","Cow","Horse","Snake","Toilet",
+  "Medicine","School","Library","Tree","Internet","Mango","Rose",
+  "Tea","Goa","Toothpaste","Honey","Baby","Underwear","Door",
+  "Jail","Beach","Cycle","Monkey"
+];
+
+/* =======================
+   LOAD SAVED WORDS
+======================= */
+let savedWords = JSON.parse(localStorage.getItem("impostorWords")) || [];
+let storedVersion = localStorage.getItem("impostorVersion");
+
+/* =======================
+   MERGE DEFAULT + SAVED
+======================= */
+if (storedVersion !== GAME_VERSION) {
+  // Add new default words that aren't already saved
+  defaultWords.forEach(word => {
+    if (!savedWords.includes(word)) savedWords.push(word);
+  });
+
+  // Update version in localStorage
+  localStorage.setItem("impostorVersion", GAME_VERSION);
+}
+
+// Save merged words back
+localStorage.setItem("impostorWords", JSON.stringify(savedWords));
+
+let words = savedWords; // Use this array for your game
+
 
   let totalPlayers = 0;
   let currentPlayer = 1;
