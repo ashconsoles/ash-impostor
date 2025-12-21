@@ -847,6 +847,12 @@ window.addEventListener("offline", () => {
   console.log("Offline mode enabled");
 });
 
+   
+self.addEventListener("message", event => {
+  if (event.data === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
 
 
    
