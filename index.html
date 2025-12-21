@@ -761,8 +761,43 @@ document.querySelectorAll(".popup").forEach(popup => {
 });
 
   
+/* =======================
+   WORD MANAGER SAVE
+======================= */
+saveWords.onclick = () => {
+  const newWords = wordInput.value
+    .split("\n")
+    .map(w => w.trim())
+    .filter(w => w.length > 0);
 
-  
+  if (newWords.length === 0) {
+    alert("Please add at least one word");
+    return;
+  }
+
+  // Save to localStorage
+  localStorage.setItem("impostorWords", JSON.stringify(newWords));
+
+  // Update game words
+  words = newWords;
+
+  alert("Words saved successfully!");
+  wordPopup.style.display = "none";
+};
+
+
+/* =======================
+   RESET TO DEFAULT WORDS
+======================= */
+resetWords.onclick = () => {
+  if (!confirm("Reset words to default?")) return;
+
+  localStorage.removeItem("impostorWords");
+  location.reload(); // reload to re-merge defaults
+};
+
+
+      
 function showPlayerSelection() {
   const list = document.getElementById("playerList");
   const endBtn = document.getElementById("endGameBtn");
