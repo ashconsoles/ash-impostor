@@ -1,4 +1,4 @@
-const CACHE_NAME = "ash-impostor-v23"; // ⬅ CHANGE this on every update
+const CACHE_NAME = "ash-impostor-v24"; // ⬅ CHANGE this on every update
 const OFFLINE_PAGE = "/ash-impostor/index.html";
 
 const ASSETS = [
