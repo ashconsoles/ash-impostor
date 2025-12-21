@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+<title>Ash Impostor</title>
    <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"></meta>
   <meta name="theme-color" content="#111111">
+   <meta name="description" content="Ash Impostor is a fun party game to play with friends. Find the impostor before they guess the word!">
+
 
   <!-- iOS PWA settings -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -160,12 +162,6 @@
 
 
 <style>
-  .post-title, .entry-title, .post-title-container, .blog-title, .title-wrap {
-      display: none !important;
-    }
-  
-  
-  
   
 
 .game-container,
@@ -839,23 +835,17 @@ function showPlayerSelection() {
 
   
 
-
- document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) {
-    if (navigator.onLine) {
-      // Internet available → behave like web app
-      location.reload();
-    } else {
-      // Offline → behave like native app
-      console.log("Offline mode: resuming without reload");
-    }
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && navigator.onLine) {
+    console.log("App resumed");
   }
 });
 
 
- window.addEventListener("offline", () => {
-  alert("Offline mode enabled");
+window.addEventListener("offline", () => {
+  console.log("Offline mode enabled");
 });
+
 
 
    
