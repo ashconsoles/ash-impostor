@@ -1,6 +1,7 @@
 {
   "name": "Ash Impostor",
   "short_name": "Ash Impostor",
+  "description": "A fun impostor game to play with friends.",
   "start_url": "/ash-impostor/index.html",
   "scope": "/ash-impostor/",
   "id": "/ash-impostor/index.html",
@@ -19,4 +20,3 @@
     }
   ]
 }
-
